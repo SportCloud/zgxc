@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baisong.identy_code.mapper.UserInfoMapper">
+	<!-- 用户登陆的结果集 -->
+	<resultMap type="com.baisong.identy_code.domain.UserInfo" id="UserInfoRM">
+		<id property="id" column="ID"/>
+		<result property="username" column="username"/>
+		<result property="password" column="password"/>
+	</resultMap>
+	
+	
+	
+	
+	<!-- 管理员的职工号结果集 -->
+	<resultMap type="com.baisong.identy_code.domain.Name" id="NameRM">
+		<id property="id" column="ID"/>
+		<result property="staff_num" column="职工号"/>
+		<result property="staff_name" column="姓名"/>
+	</resultMap>
+	<!-- 一对多关联关系 -->
+	<resultMap type="com.baisong.identy_code.domain.Name" id="nameSalaryRM" extends="NameRM">
+		<!-- ofType用来区分JavaBean（或字段）属性类型和集合包含的类型 -->
+		<collection property="salary" ofType="com.baisong.identy_code.domain.Salary">
+			<id property="id" column="id"/>
+			<result property="date" column="date"/>
+			<result property="base_pay" column="base_pay"/>
+			<result property="allowance" column="allowance"/>
+			<result property="staff_num" column="staff_num"/>
+		</collection>
+	</resultMap>
+	
+	
+	<!-- 管理员的薪资结果集 -->
+	<resultMap type="com.baisong.identy_code.domain.Salary" id="SalaryRM">
+		<id property="id" column="id"/>
+		<result property="date" column="date"/>
+		<result property="base_pay" column="base_pay"/>
+		<result property="allowance" column="allowance"/>
+		<result property="staff_num" column="staff_num"/>
+	</resultMap>
+	
+	<!-- 职工的结果集 -->
+	<resultMap type="com.baisong.identy_code.domain.Staff" id="StaffRM">
+		<id property="id" column="ID"/>
+		<result property="staff_num" column="staff_num"/>
+		<result property="name" column="name"/>
+		<result property="gender" column="gender"/>
+		<result property="phonenum" column="phonenum"/>
+		<result property="email" column="email"/>
+		<result property="hobby" column="hobby"/>
+	</resultMap>
+	
+		<!-- 添加登陆用户数据 -->
+		<insert id="insertUser" parameterType="com.baisong.identy_code.domain.UserInfo">
+	    	insert into user(username, password)
+	    		values(
+		    		#{username},
+					#{password}
+	    		);
+	    </insert>
+	    
+		<!-- 管理员职工号添加数据 -->
+		<insert id="insertName" parameterType="com.baisong.identy_code.domain.Name">
+	    	insert into name(staff_num, staff_name)
+	    		values(
+		    		#{staff_num},
+					#{staff_name}
+	    		);
+	    </insert>
+    
+    	
+		<!-- 管理员薪资添加数据 -->
+		<insert id="insertSalary" parameterType="com.baisong.identy_code.domain.Salary">
+	    	insert into salary(date, base_pay, allowance, staff_num)
+	    		values(
+		    		#{date, jdbcType=VARCHAR},
+					#{base_pay, jdbcType=VARCHAR},
+					#{allowance, jdbcType=VARCHAR},
+					#{staff_num, jdbcType=VARCHAR}
+	    		)
+	    </insert>
+    
+    	<!-- 职工添加数据 -->
+		<insert id="insertStaff" parameterType="com.baisong.identy_code.domain.Staff">
+	    	insert into staff(staff_num, name, gender, phonenum, email, hobby)
+	    		values(
+	    			#{staff_num},
+		    		#{name},
+					#{gender},
+					#{phonenum},
+	    			#{email},
+					#{hobby}
+	    		)
+	    </insert>
+    	
+    	<!-- 修改用户登录数据 -->
+	    <update id="updateUser" parameterType="com.baisong.identy_code.domain.UserInfo">
+			update user set
+			password = #{password}
+			where username=#{username}
+		</update>
+    	
+    	<!-- 管理员职工号修改数据 -->
+	    <update id="updateName" parameterType="com.baisong.identy_code.domain.Name">
+			update name set
+			staff_num = #{staff_num},
+			staff_name = #{staff_name}
+			where id=#{id}
+		</update>
+	
+	
+    	<!-- 管理员薪资修改数据 -->
+	    <update id="updateSalary" parameterType="com.baisong.identy_code.domain.Salary">
+			update salary set
+			date = #{date},
+			base_pay = #{base_pay},
+			allowance = #{allowance},
+			staff_num = #{staff_num}
+			where id=#{id}
+		</update>
+	
+	<!-- 职工修改数据 -->
+	    <update id="updateStaff" parameterType="com.baisong.identy_code.domain.Staff">
+			update staff set
+			staff_num = #{staff_num},
+			name = #{name},
+			gender = #{gender},
+			phonenum = #{phonenum},
+			email = #{email},
+			hobby = #{hobby}
+			where id=#{id}
+		</update>
+	
+		<!-- 删除用户登录数据 -->
+		<!--parameterType是看#{。。。}中的参数类型-->
+		<delete id="deleteUser" parameterType="string">
+			delete from user where username=#{username}
+		</delete>
+		
+		<!-- 管理员职工号删除数据 -->
+		<!--parameterType是看#{。。。}中的参数类型-->
+		<delete id="deleteName" parameterType="int">
+			delete from name where id=#{id}
+		</delete>
+		
+		<!-- 管理员薪资删除数据 -->
+		<!--parameterType是看#{。。。}中的参数类型-->
+		<delete id="deleteSalary" parameterType="int">
+			delete from salary where id=#{id}
+		</delete>
+		
+		<!-- 用户登录用户名查询 -->
+		 <select id="getUserByName" parameterType="string" resultMap="UserInfoRM">
+	            <!-- 此处写sql语句,#{Mapper类传入的参数} -->
+	            select * from user where username = #{username}
+	    </select>
+	    
+		<!-- 一对多关联查询所有数据 -->
+		<select id="findNameSalary" parameterType="string" resultMap="nameSalaryRM">
+			select n.staff_num, n.staff_name, s.date, s.base_pay, s.allowance
+			from
+			(select * from name where staff_num = #{staff_num}) n
+			left join
+			(select * from salary where staff_num = #{staff_num}) s
+			on n.staff_num = s.staff_num
+		</select>
+	
+		<!-- 查询管理员职工号所有数据 -->
+		<select id="findName" parameterType="map" resultMap="NameRM">
+	            select * from name
+	    </select>
+	    
+	    <!-- 查询管理员薪资所有数据 -->
+		<select id="findSalary" parameterType="map" resultMap="SalaryRM">
+	            select * from salary
+	    </select>
+	    
+	    <!-- 通过职工号查询职工数据 -->
+		<select id="findStaffByName" parameterType="string" resultMap="StaffRM">
+	            select * from staff where staff_num = #{staff_num}
+	    </select>
+	    
+	    <!-- 管理员职工号根据id查询数据 -->
+	    <select id="findNameById" parameterType="int" resultType="com.baisong.identy_code.domain.Name">
+	            select * from name where id=#{id}
+	    </select>
+	    
+	    <!-- 通过职工号查询薪资数据 -->
+		<select id="findSalaryByName" parameterType="string" resultMap="SalaryRM">
+	            select * from salary where staff_num = #{staff_num}
+	    </select>
+	    
+	    <!-- 管理员薪资根据id查询数据 -->
+	    <select id="findSalaryById" parameterType="int" resultType="com.baisong.identy_code.domain.Salary">
+	            select * from salary where id=#{id}
+	    </select>
+	    
+	    <!-- 职工根据id查询数据 -->
+	    <select id="findStaffById" parameterType="int" resultType="com.baisong.identy_code.domain.Staff">
+	            select * from staff where id=#{id}
+	    </select>
+	</mapper>
+	

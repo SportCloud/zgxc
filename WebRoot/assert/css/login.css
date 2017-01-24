@@ -1,0 +1,63 @@
+body{
+    overflow: hidden;
+    background-color: #000000;
+}
+.bg{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    color: #ffffff;
+}
+div{
+    position: relative;
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 300px;
+    padding: 30px 0;
+}
+table{
+    margin: 0 auto;
+}
+tr{
+    display: block;
+    margin: 10px 0;
+}
+th{
+    color: #0182CD;
+}
+input[type=submit],input[type=button]{
+    border: 0;
+    width: 45px;
+    height: 25px;
+    background-color: #214167;
+    color: #1997fe;
+    cursor: pointer;
+}
+input[type=submit]:hover{
+    background-color: #1997fe;
+    color: #ffffff;
+}
+input[type=button]:hover{
+    background-color: #1997fe;
+    color: #ffffff;
+}
+input,select{
+    border: 1px solid #000000;
+}
+input[type=text],input[type=password]{
+    padding-left: 5px;
+    width: 170px;
+}
+select{
+    color: #1990fe;
+    width: 180px;
+}
+select:hover{
+    cursor: pointer;
+}
+.buttons{
+    margin-top: 20px;
+}
+input[name=confirm]{
+    margin-left: 170px;
+}
